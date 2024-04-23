@@ -2,7 +2,9 @@ NAME		=	bim
 
 SRCS		=	\
 				main.cpp \
-				Screen.cpp
+				Screen.cpp \
+				Editor.cpp \
+				Cursor.cpp
 				
 
 _OBJS		=	${SRCS:.cpp=.o}

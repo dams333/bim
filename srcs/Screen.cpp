@@ -40,7 +40,7 @@ void Screen::init() {
 	}
 	initscr();
 	noecho();
-	curs_set(0);
+	curs_set(2);
 	keypad(stdscr, TRUE);
 	refresh();
 	getmaxyx(stdscr, this->height, this->width);
@@ -80,6 +80,14 @@ void Screen::clear() {
 	wclear(this->win);
 }
 
+void Screen::setCursor(int x, int y) {
+	if (this->win == NULL) {
+		throw std::runtime_error("Screen not initialized");
+	}
+
+	wmove(this->win, y, x);
+}
+
 void Screen::print(int x, int y, char c) {
 	if (this->win == NULL) {
 		throw std::runtime_error("Screen not initialized");
@@ -106,4 +114,21 @@ void Screen::print(int x, int y, char const *format, ...) {
 	vsnprintf(buffer, len + 1, format, args);
 	mvwprintw(this->win, y, x, buffer);
 	va_end(args);
+}
+
+int Screen::getInput() {
+	if (this->win == NULL) {
+		throw std::runtime_error("Screen not initialized");
+	}
+
+	return wgetch(this->win);
+}
+
+void Screen::resize() {
+	if (this->win == NULL) {
+		throw std::runtime_error("Screen not initialized");
+	}
+
+	getmaxyx(stdscr, this->height, this->width);
+	wresize(this->win, this->height, this->width);
 }

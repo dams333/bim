@@ -25,6 +25,11 @@ class Screen {
 		void terminate();
 
 		void clear();
+		void setCursor(int x, int y);
 		void print(int x, int y, char c);
 		void print(int x, int y, char const *format, ...);
+
+		int getInput();
+
+		void resize();
 };
