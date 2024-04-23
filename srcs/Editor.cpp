@@ -23,10 +23,9 @@ void Editor::init() {
 	this->screen.init();
 }
 
-void Editor::update(int c) {
+void Editor::update() {
 	this->screen.clear();
 
-	this->screen.print(1, 0, "Input: %d", c);
 	this->screen.print(1, 1, "Width: %d", this->screen.getWidth());
 	this->screen.print(1, 2, "Height: %d", this->screen.getHeight());
 
@@ -56,6 +55,6 @@ void Editor::routine() {
 		if (c == 66 && this->cursor.getY() < this->screen.getHeight() - 1) { // Down
 			this->cursor.setY(this->cursor.getY() + 1);
 		}
-		this->update(c);
+		this->update();
 	}
 }

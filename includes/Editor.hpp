@@ -8,7 +8,7 @@ class Editor {
 		Screen screen;
 		Cursor cursor;
 
-		void update(int c);
+		void update();
 
 	public:
 		Editor();
