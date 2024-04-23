@@ -4,7 +4,8 @@ SRCS		=	\
 				main.cpp \
 				Screen.cpp \
 				Editor.cpp \
-				Cursor.cpp
+				Cursor.cpp \
+				ContentBuffer.cpp
 				
 
 _OBJS		=	${SRCS:.cpp=.o}
@@ -12,7 +13,7 @@ OBJS		=	$(addprefix build/, $(_OBJS))
 OBJS_DEPEND	=	${OBJS:.o=.d}
 
 CXX			=	clang++
-CXXFLAGS	=   -Wall -Wextra -Werror -std=c++20
+CXXFLAGS	=   -Wall -Wextra -Werror -std=c++20 -fsanitize=address,undefined -g3
 INCLUDE		=	-I includes/
 
 all		:	$(NAME)
