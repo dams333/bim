@@ -95,6 +95,15 @@ void Screen::print(int x, int y, char const *format, ...) {
 	
 	va_list args;
 	va_start(args, format);
-	mvwprintw(this->win, y, x, format, args);
+	va_list args_copy;
+	va_copy(args_copy, args);
+	int len = vsnprintf(NULL, 0, format, args_copy);
+	va_end(args_copy);
+	if (len < 0) {
+		throw std::runtime_error("Failed to format string");
+	}
+	char buffer[len + 1];
+	vsnprintf(buffer, len + 1, format, args);
+	mvwprintw(this->win, y, x, buffer);
 	va_end(args);
 }
