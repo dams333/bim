@@ -25,18 +25,71 @@ void Editor::init() {
 	this->screen.init();
 }
 
+int Editor::getLeftPadding() {
+	return std::to_string(this->contentBuffer.getLineCount()).length() + 1;
+}
+
+#include <iostream>
+
+std::pair<int, int> Editor::printContent() {
+	int leftPadding = this->getLeftPadding();
+
+	if (leftPadding < 4) {
+		leftPadding = 4;
+	}
+
+	std::pair<int, int> cursorOnScreen = std::make_pair(-1, -1);
+	int screenLine = 0;
+	for (int line = this->firstLine; line < this->contentBuffer.getLineCount(); line++) {
+		if (screenLine >= this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
+			break;
+		}
+
+		int numerotationPadding = leftPadding - std::to_string(line + 1).length() - 1;
+		this->screen.print(numerotationPadding, screenLine, std::to_string(line + 1).c_str());
+		std::string lineContent = this->contentBuffer.getLine(line);
+		if (lineContent.empty()) {
+			if (line == this->cursor.getLine()) {
+				cursorOnScreen = std::make_pair(leftPadding, screenLine);
+			}
+			screenLine++;
+		}
+		int posInLine = 0;
+		while (!lineContent.empty()) {
+			size_t sizeToPrint = this->screen.getWidth() - leftPadding;
+			if (sizeToPrint > lineContent.length()) {
+				sizeToPrint = lineContent.length();
+			}
+			int lastPos = posInLine + sizeToPrint;
+			if (line == this->cursor.getLine() && posInLine <= this->cursor.getPos() && this->cursor.getPos() <= lastPos) {
+				cursorOnScreen = std::make_pair(leftPadding + this->cursor.getPos() - posInLine, screenLine);
+			}
+			this->screen.print(leftPadding, screenLine, lineContent.substr(0, sizeToPrint).c_str());
+			lineContent = lineContent.substr(sizeToPrint);
+			screenLine++;
+			posInLine += sizeToPrint;
+
+			if (screenLine >= this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
+				break;
+			}
+		}
+	}
+
+	return cursorOnScreen;
+}
+
 void Editor::update() {
 	this->screen.clear();
 
-	for (int i = 0; i < this->screen.getHeight(); i++) {
-		int line = i + this->firstLine;
-		if (line >= this->contentBuffer.getLineCount()) {
-			break;
-		}
-		this->screen.print(0, i, this->contentBuffer.getLine(line).c_str());
+	auto cursorOnScreen = this->printContent();
+	if (cursorOnScreen.first >= this->screen.getWidth()) {
+		cursorOnScreen.first = this->screen.getWidth() - 1;
 	}
 
-	this->screen.setCursor(this->cursor.getX(), this->cursor.getY());
+	this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT, "------");
+	this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "Press 'q' to quit");
+
+	this->screen.setCursor(cursorOnScreen.first, cursorOnScreen.second);
 
 	this->screen.update();
 }
@@ -44,45 +97,29 @@ void Editor::update() {
 #include <iostream>
 
 void Editor::routine() {
+	this->update();
 	while (true) {
 		int c = this->screen.getInput();
-		std::cerr << c << std::endl;
 		if (c == KEY_RESIZE) {
 			this->screen.resize();
 		} else if (c == 113) { // Q
 			break;
 		} else if (c == 68) { // Left
-			if (this->cursor.getX() > 0)
-				this->cursor.setX(this->cursor.getX() - 1);
 		} else if (c == 67) { // Right
-			if (this->cursor.getX() < this->screen.getWidth() - 1)
-				this->cursor.setX(this->cursor.getX() + 1);
 		} else if (c == 65) { // Up
-			if (this->cursor.getY() > 0)
-				this->cursor.setY(this->cursor.getY() - 1);
 		} else if (c == 66) { // Down
-			if (this->cursor.getY() < this->screen.getHeight() - 1 && this->cursor.getY() < this->contentBuffer.getLineCount() - 1)
-				this->cursor.setY(this->cursor.getY() + 1);
 		} else if (c == 10) { // Enter
-			if (this->cursor.getY() == this->screen.getHeight() - 1) {
+			this->contentBuffer.newLine(this->cursor.getLine());
+			//todo: replace detection by real position of cursor on screen (problem with line on multiple lines)
+			if (this->cursor.getLine() == this->firstLine + this->screen.getHeight() - Editor::FOOTER_HEIGHT - 1) {
 				this->firstLine++;
 			}
-			this->contentBuffer.newLine(this->cursor.getY() + this->firstLine);
-			this->cursor.setX(0);
-			this->cursor.setY(this->cursor.getY() + 1);
+			this->cursor.setLine(this->cursor.getLine() + 1);
+			this->cursor.setPos(0);
 		} else if (c == 127) { // Backspace
-			if (this->cursor.getX() > 0) {
-				this->contentBuffer.erase(this->cursor.getY() + this->firstLine, this->cursor.getX() - 1);
-				this->cursor.setX(this->cursor.getX() - 1);
-			}
-		} else if (isprint(c) && c != 27 && c != 91) {
-			this->contentBuffer.append(this->cursor.getY() + this->firstLine, this->cursor.getX(), c);
-			this->cursor.setX(this->cursor.getX() + 1);
-		}
-
-		int currentLineLength = this->contentBuffer.getLine(this->cursor.getY() + this->firstLine).length();
-		if (this->cursor.getX() > currentLineLength) {
-			this->cursor.setX(currentLineLength);
+		} else { // char
+			this->contentBuffer.append(this->cursor.getLine(), this->cursor.getPos(), c);
+			this->cursor.setPos(this->cursor.getPos() + 1);
 		}
 
 		this->update();

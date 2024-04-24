@@ -6,12 +6,16 @@
 
 class Editor {
 	private:
+		static const int FOOTER_HEIGHT = 2;
+
 		Screen screen;
 		Cursor cursor;
 		ContentBuffer contentBuffer;
 		int firstLine;
 
 		void update();
+		int getLeftPadding();
+		std::pair<int, int> printContent();
 
 	public:
 		Editor();

@@ -2,8 +2,8 @@
 
 class Cursor {
 	private:
-		int x;
-		int y;
+		int line;
+		int pos;
 
 	public:
 		Cursor();
@@ -12,9 +12,9 @@ class Cursor {
 
 		Cursor &operator=(Cursor const &rhs);
 
-		int getX() const;
-		int getY() const;
+		int getLine() const;
+		int getPos() const;
 
-		void setX(int x);
-		void setY(int y);
+		void setLine(int line);
+		void setPos(int pos);
 };

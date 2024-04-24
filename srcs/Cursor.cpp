@@ -1,6 +1,6 @@
 #include "Cursor.hpp"
 
-Cursor::Cursor() : x(0), y(0) {
+Cursor::Cursor() : line(0), pos(0) {
 }
 
 Cursor::~Cursor() {
@@ -14,23 +14,23 @@ Cursor &Cursor::operator=(Cursor const &rhs) {
 	if (this != &rhs) {
 		*this = rhs;
 	}
-	this->x = rhs.x;
-	this->y = rhs.y;
+	this->line = rhs.line;
+	this->pos = rhs.pos;
 	return *this;
 }
 
-int Cursor::getX() const {
-	return this->x;
+int Cursor::getLine() const {
+	return this->line;
 }
 
-int Cursor::getY() const {
-	return this->y;
+int Cursor::getPos() const {
+	return this->pos;
 }
 
-void Cursor::setX(int x) {
-	this->x = x;
+void Cursor::setLine(int line) {
+	this->line = line;
 }
 
-void Cursor::setY(int y) {
-	this->y = y;
+void Cursor::setPos(int pos) {
+	this->pos = pos;
 }
