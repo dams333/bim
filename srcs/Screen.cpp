@@ -112,7 +112,7 @@ void Screen::print(int x, int y, char const *format, ...) {
 	}
 	char buffer[len + 1];
 	vsnprintf(buffer, len + 1, format, args);
-	mvwprintw(this->win, y, x, buffer);
+	mvwprintw(this->win, y, x, "%s", buffer);
 	va_end(args);
 }
 
