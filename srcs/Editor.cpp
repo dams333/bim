@@ -100,28 +100,8 @@ void Editor::routine() {
 	this->update();
 	while (true) {
 		int c = this->screen.getInput();
-		if (c == KEY_RESIZE) {
-			this->screen.resize();
-		} else if (c == 113) { // Q
+		if (this->inputHandler(c))
 			break;
-		} else if (c == 68) { // Left
-		} else if (c == 67) { // Right
-		} else if (c == 65) { // Up
-		} else if (c == 66) { // Down
-		} else if (c == 10) { // Enter
-			this->contentBuffer.newLine(this->cursor.getLine());
-			//todo: replace detection by real position of cursor on screen (problem with line on multiple lines)
-			if (this->cursor.getLine() == this->firstLine + this->screen.getHeight() - Editor::FOOTER_HEIGHT - 1) {
-				this->firstLine++;
-			}
-			this->cursor.setLine(this->cursor.getLine() + 1);
-			this->cursor.setPos(0);
-		} else if (c == 127) { // Backspace
-		} else { // char
-			this->contentBuffer.append(this->cursor.getLine(), this->cursor.getPos(), c);
-			this->cursor.setPos(this->cursor.getPos() + 1);
-		}
-
 		this->update();
 	}
 }

@@ -17,6 +17,8 @@ class Editor {
 		int getLeftPadding();
 		std::pair<int, int> printContent();
 
+		bool inputHandler(int input);
+
 	public:
 		Editor();
 		~Editor();

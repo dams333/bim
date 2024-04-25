@@ -5,7 +5,10 @@ SRCS		=	\
 				Screen.cpp \
 				Editor.cpp \
 				Cursor.cpp \
-				ContentBuffer.cpp
+				ContentBuffer.cpp \
+				$(addprefix inputs/, \
+					InputHandler.cpp \
+				)
 				
 
 _OBJS		=	${SRCS:.cpp=.o}
