@@ -8,6 +8,7 @@ SRCS		=	\
 				ContentBuffer.cpp \
 				$(addprefix inputs/, \
 					InputHandler.cpp \
+					InputArrows.cpp \
 				)
 				
 
