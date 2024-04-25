@@ -1,6 +1,6 @@
 #include "Editor.hpp"
 
-Editor::Editor(): firstLine(0), escaping(false) {
+Editor::Editor(): firstLine(0), mode(Editor::Mode::VISUAL), escaping(false) {
 }
 
 Editor::~Editor() {
@@ -19,6 +19,7 @@ Editor &Editor::operator=(Editor const &rhs) {
 	this->firstLine = rhs.firstLine;
 	this->contentBuffer = rhs.contentBuffer;
 	this->escaping = rhs.escaping;
+	this->mode = rhs.mode;
 	return *this;
 }
 
@@ -88,7 +89,11 @@ void Editor::update() {
 	}
 
 	this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT, "------");
-	this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "Press 'q' to quit");
+	if (this->mode == Editor::Mode::INSERT) {
+		this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "INSERT");
+	} else {
+		this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "VISUAL");
+	}
 
 	this->screen.setCursor(cursorOnScreen.first, cursorOnScreen.second);
 

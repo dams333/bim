@@ -6,12 +6,17 @@
 
 class Editor {
 	private:
+		typedef enum {
+			VISUAL,
+			INSERT,
+		} Mode;
 		static const int FOOTER_HEIGHT = 2;
 
 		Screen screen;
 		Cursor cursor;
 		ContentBuffer contentBuffer;
 		int firstLine;
+		Editor::Mode mode;
 
 		void update();
 		int getLeftPadding();

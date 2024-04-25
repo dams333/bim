@@ -14,7 +14,10 @@ void Editor::repairCursor() {
 	}
 }
 
+#include <iostream>
+
 bool Editor::inputHandler(int input) {
+	std::cerr << "input: " << input << std::endl;
 	if (input == 27) {
 		this->escaping = true;
 		return false;
@@ -36,17 +39,27 @@ bool Editor::inputHandler(int input) {
 	} else {
 		if (input == KEY_RESIZE) {
 			this->screen.resize();
-		} else if (input == 113) { // Q
-			return true;
-		} else if (input == 10) { // Enter
-			this->contentBuffer.newLine(this->cursor.getLine());
-			this->cursor.setLine(this->cursor.getLine() + 1);
-			this->cursor.setPos(0);
-			this->repairCursor();
-		} else if (input == 127) { // Backspace
-		} else { // char
-			this->contentBuffer.append(this->cursor.getLine(), this->cursor.getPos(), input);
-			this->cursor.setPos(this->cursor.getPos() + 1);
+		}
+		if (this->mode == Editor::Mode::INSERT) {
+			if (input == 92) { // Backslash (TODO: replace by escape, rework input escaping handle)
+				this->mode = Editor::Mode::VISUAL;
+			} else if (input == 10) { // Enter
+				//TODO: handle enter not at the end of the line
+				this->contentBuffer.newLine(this->cursor.getLine());
+				this->cursor.setLine(this->cursor.getLine() + 1);
+				this->cursor.setPos(0);
+				this->repairCursor();
+			} else if (input == 127) { // Backspace
+			} else { // char
+				this->contentBuffer.append(this->cursor.getLine(), this->cursor.getPos(), input);
+				this->cursor.setPos(this->cursor.getPos() + 1);
+			}
+		} else if (this->mode == Editor::Mode::VISUAL) {
+			if (input == 105) { // i
+				this->mode = Editor::Mode::INSERT;
+			} else if (input == 113) { // q
+				return true;
+			}
 		}
 	}
 
