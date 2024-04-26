@@ -1,6 +1,6 @@
 #include "Editor.hpp"
 
-Editor::Editor(): firstLine(0), mode(Editor::Mode::VISUAL), escaping(false) {
+Editor::Editor(): firstLine(0), mode(Editor::Mode::VISUAL) {
 }
 
 Editor::~Editor() {
@@ -18,7 +18,6 @@ Editor &Editor::operator=(Editor const &rhs) {
 	this->cursor = rhs.cursor;
 	this->firstLine = rhs.firstLine;
 	this->contentBuffer = rhs.contentBuffer;
-	this->escaping = rhs.escaping;
 	this->mode = rhs.mode;
 	return *this;
 }

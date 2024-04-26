@@ -18,30 +18,21 @@ void Editor::repairCursor() {
 
 bool Editor::inputHandler(int input) {
 	std::cerr << "input: " << input << std::endl;
-	if (input == 27) {
-		this->escaping = true;
-		return false;
-	}
-	if (this->escaping && input == 91) {
-		return false;
-	}
 	
-	if (this->escaping) {
-		if (input == 68) {
-			this->arrowLeft();
-		} else if (input == 67) {
-			this->arrowRight();
-		} else if (input == 65) {
-			this->arrowUp();
-		} else if (input == 66) {
-			this->arrowDown();
-		}
+	if (input == KEY_LEFT) {
+		this->arrowLeft();
+	} else if (input == KEY_RIGHT) {
+		this->arrowRight();
+	} else if (input == KEY_UP) {
+		this->arrowUp();
+	} else if (input == KEY_DOWN) {
+		this->arrowDown();
+	} else if (input == KEY_RESIZE) {
+		this->screen.resize();
 	} else {
-		if (input == KEY_RESIZE) {
-			this->screen.resize();
-		}
+
 		if (this->mode == Editor::Mode::INSERT) {
-			if (input == 92) { // Backslash (TODO: replace by escape, rework input escaping handle)
+			if (input == 27) { // Escape
 				this->mode = Editor::Mode::VISUAL;
 			} else if (input == 10) { // Enter
 				int lineLength = this->contentBuffer.getLine(this->cursor.getLine()).length();
@@ -68,8 +59,8 @@ bool Editor::inputHandler(int input) {
 				return true;
 			}
 		}
+
 	}
 
-	this->escaping = false;
 	return false;
 }

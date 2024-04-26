@@ -22,7 +22,6 @@ class Editor {
 		int getLeftPadding();
 		std::pair<int, int> printContent();
 
-		bool escaping;
 		bool inputHandler(int input);
 		void repairCursor();
 		void arrowUp();

@@ -41,7 +41,6 @@ void Screen::init() {
 	initscr();
 	noecho();
 	curs_set(2);
-	keypad(stdscr, TRUE);
 	refresh();
 	getmaxyx(stdscr, this->height, this->width);
 	this->win = newwin(this->height, this->width, 0, 0);
@@ -121,7 +120,39 @@ int Screen::getInput() {
 		throw std::runtime_error("Screen not initialized");
 	}
 
-	return wgetch(this->win);
+	int c = wgetch(this->win);
+
+	if (c == ERR) {
+		throw std::runtime_error("Failed to get input");
+	}
+	if (c == 27) {
+		nodelay(this->win, TRUE);
+		c = wgetch(this->win);
+		if (c == ERR) {
+			c = 27;
+		} else {
+			//TODO: handle other escape sequences
+			if (c == 91) {
+				c = wgetch(this->win);
+				if (c == ERR) {
+					c = 91;
+				} else {
+					if (c == 65) {
+						c = KEY_UP;
+					} else if (c == 66) {
+						c = KEY_DOWN;
+					} else if (c == 67) {
+						c = KEY_RIGHT;
+					} else if (c == 68) {
+						c = KEY_LEFT;
+					}
+				}
+			}
+		}
+	}
+	nodelay(this->win, FALSE);
+
+	return c;
 }
 
 void Screen::resize() {
