@@ -18,6 +18,7 @@ class ContentBuffer {
 		void removeLine(int index);
 		int getLineCount();
 		std::string getLine(int index);
+		void setLine(int index, std::string line);
 		void append(int index, int position, char c);
 		void erase(int index, int position);
 };

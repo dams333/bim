@@ -35,6 +35,10 @@ std::string ContentBuffer::getLine(int index) {
 	return this->buffer[index];
 }
 
+void ContentBuffer::setLine(int index, std::string line) {
+	this->buffer[index] = line;
+}
+
 void ContentBuffer::append(int index, int position, char c) {
 	this->buffer[index].insert(this->buffer[index].begin() + position, c);
 }
