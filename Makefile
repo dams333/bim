@@ -9,6 +9,7 @@ SRCS		=	\
 				$(addprefix inputs/, \
 					InputHandler.cpp \
 					InputArrows.cpp \
+					InputContent.cpp \
 				)
 				
 

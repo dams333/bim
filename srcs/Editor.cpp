@@ -99,8 +99,6 @@ void Editor::update() {
 	this->screen.update();
 }
 
-#include <iostream>
-
 void Editor::routine() {
 	this->update();
 	while (true) {

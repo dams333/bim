@@ -14,11 +14,7 @@ void Editor::repairCursor() {
 	}
 }
 
-#include <iostream>
-
-bool Editor::inputHandler(int input) {
-	std::cerr << "input: " << input << std::endl;
-	
+bool Editor::inputHandler(int input) {	
 	if (input == KEY_LEFT) {
 		this->arrowLeft();
 	} else if (input == KEY_RIGHT) {
@@ -30,37 +26,15 @@ bool Editor::inputHandler(int input) {
 	} else if (input == KEY_RESIZE) {
 		this->screen.resize();
 	} else {
-
 		if (this->mode == Editor::Mode::INSERT) {
 			if (input == 27) { // Escape
 				this->mode = Editor::Mode::VISUAL;
 			} else if (input == 10) { // Enter
-				int lineLength = this->contentBuffer.getLine(this->cursor.getLine()).length();
-				if (this->cursor.getPos() < lineLength) {
-					std::string line = this->contentBuffer.getLine(this->cursor.getLine()).substr(this->cursor.getPos());
-					this->contentBuffer.setLine(this->cursor.getLine(), this->contentBuffer.getLine(this->cursor.getLine()).substr(0, this->cursor.getPos()));
-					this->contentBuffer.newLine(this->cursor.getLine());
-					this->contentBuffer.setLine(this->cursor.getLine() + 1, line);
-				} else {
-					this->contentBuffer.newLine(this->cursor.getLine());
-				}
-				this->cursor.setLine(this->cursor.getLine() + 1);
-				this->cursor.setPos(0);
-				this->repairCursor();
+				this->enter();
 			} else if (input == 127) { // Backspace
-				if (this->cursor.getPos() > 0) {
-					this->contentBuffer.setLine(this->cursor.getLine(), this->contentBuffer.getLine(this->cursor.getLine()).substr(0, this->cursor.getPos() - 1) + this->contentBuffer.getLine(this->cursor.getLine()).substr(this->cursor.getPos()));
-					this->cursor.setPos(this->cursor.getPos() - 1);
-				} else if (this->cursor.getLine() > 0) {
-					int lineLength = this->contentBuffer.getLine(this->cursor.getLine() - 1).length();
-					this->contentBuffer.setLine(this->cursor.getLine() - 1, this->contentBuffer.getLine(this->cursor.getLine() - 1) + this->contentBuffer.getLine(this->cursor.getLine()));
-					this->contentBuffer.removeLine(this->cursor.getLine());
-					this->cursor.setLine(this->cursor.getLine() - 1);
-					this->cursor.setPos(lineLength);
-				}
+				this->erase();
 			} else { // char
-				this->contentBuffer.append(this->cursor.getLine(), this->cursor.getPos(), input);
-				this->cursor.setPos(this->cursor.getPos() + 1);
+				this->addChar(input);
 			}
 		} else if (this->mode == Editor::Mode::VISUAL) {
 			if (input == 105) { // i

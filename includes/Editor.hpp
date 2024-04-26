@@ -28,6 +28,9 @@ class Editor {
 		void arrowDown();
 		void arrowLeft();
 		void arrowRight();
+		void enter();
+		void erase();
+		void addChar(int input);
 
 	public:
 		Editor();
