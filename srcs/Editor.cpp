@@ -1,6 +1,6 @@
 #include "Editor.hpp"
 
-Editor::Editor(): firstLine(0), mode(Editor::Mode::VISUAL) {
+Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
 }
 
 Editor::~Editor() {
@@ -19,6 +19,8 @@ Editor &Editor::operator=(Editor const &rhs) {
 	this->firstLine = rhs.firstLine;
 	this->contentBuffer = rhs.contentBuffer;
 	this->mode = rhs.mode;
+	this->lastPrintedLine = rhs.lastPrintedLine;
+	this->lastUsedScreenLine = rhs.lastUsedScreenLine;
 	return *this;
 }
 
@@ -40,14 +42,19 @@ std::pair<int, int> Editor::printContent() {
 	}
 
 	std::pair<int, int> cursorOnScreen = std::make_pair(-1, -1);
+	std::map<int, std::string> res;
 	int screenLine = 0;
 	for (int line = this->firstLine; line < this->contentBuffer.getLineCount(); line++) {
 		if (screenLine >= this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
 			break;
 		}
 
+		this->lastPrintedLine = line;
+		this->lastUsedScreenLine = screenLine;
+
 		int numerotationPadding = leftPadding - std::to_string(line + 1).length() - 1;
 		this->screen.print(numerotationPadding, screenLine, std::to_string(line + 1).c_str());
+		
 		std::string lineContent = this->contentBuffer.getLine(line);
 		if (lineContent.empty()) {
 			if (line == this->cursor.getLine()) {
@@ -56,6 +63,7 @@ std::pair<int, int> Editor::printContent() {
 			screenLine++;
 		}
 		int posInLine = 0;
+		int firstLineOnScreen = screenLine;
 		while (!lineContent.empty()) {
 			size_t sizeToPrint = this->screen.getWidth() - leftPadding;
 			if (sizeToPrint > lineContent.length()) {
@@ -63,17 +71,46 @@ std::pair<int, int> Editor::printContent() {
 			}
 			int lastPos = posInLine + sizeToPrint;
 			if (line == this->cursor.getLine() && posInLine <= this->cursor.getPos() && this->cursor.getPos() <= lastPos) {
-				cursorOnScreen = std::make_pair(leftPadding + this->cursor.getPos() - posInLine, screenLine);
+				int cursorPosOnScreen = leftPadding + this->cursor.getPos() - posInLine;
+				int cursorLineOnScreen = screenLine;
+				if (cursorPosOnScreen >= this->screen.getWidth()) {
+					cursorPosOnScreen = leftPadding;
+					cursorLineOnScreen++;
+				}
+				if (cursorLineOnScreen >= this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
+					this->firstLine++;
+					this->screen.clear();
+					return this->printContent();
+				}
+				cursorOnScreen = std::make_pair(cursorPosOnScreen, cursorLineOnScreen);
 			}
-			this->screen.print(leftPadding, screenLine, lineContent.substr(0, sizeToPrint).c_str());
+			res[screenLine] = lineContent.substr(0, sizeToPrint);
 			lineContent = lineContent.substr(sizeToPrint);
+			this->lastUsedScreenLine = screenLine;
 			screenLine++;
 			posInLine += sizeToPrint;
 
 			if (screenLine >= this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
+				if (!lineContent.empty()) {
+					if (line == this->cursor.getLine()) {
+						this->firstLine++;
+						this->screen.clear();
+						return this->printContent();
+					}
+					for (int i = firstLineOnScreen; i < screenLine; i++) {
+						res[i] = "...";
+					}
+					std::string clearLine = std::string(this->screen.getWidth(), ' ');
+					this->screen.print(0, firstLineOnScreen, clearLine.c_str());
+					this->lastPrintedLine = line - 1;
+				}
 				break;
 			}
 		}
+	}
+
+	for (auto it = res.begin(); it != res.end(); it++) {
+		this->screen.print(leftPadding, it->first, it->second.c_str());
 	}
 
 	return cursorOnScreen;
@@ -83,9 +120,6 @@ void Editor::update() {
 	this->screen.clear();
 
 	auto cursorOnScreen = this->printContent();
-	if (cursorOnScreen.first >= this->screen.getWidth()) {
-		cursorOnScreen.first = this->screen.getWidth() - 1;
-	}
 
 	this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT, "------");
 	if (this->mode == Editor::Mode::INSERT) {

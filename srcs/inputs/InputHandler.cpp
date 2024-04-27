@@ -5,13 +5,6 @@ void Editor::repairCursor() {
 	if (this->cursor.getPos() > lineLength) {
 		this->cursor.setPos(lineLength);
 	}
-
-	//TODO: replace detection by on screen pos (too long line => 1 line in buffer = 2 lines on screen)
-	if (this->cursor.getLine() < this->firstLine) {
-		this->firstLine = this->cursor.getLine();
-	} else if (this->cursor.getLine() >= this->firstLine + this->screen.getHeight() - Editor::FOOTER_HEIGHT) {
-		this->firstLine = this->cursor.getLine() - this->screen.getHeight() + Editor::FOOTER_HEIGHT + 1;
-	}
 }
 
 bool Editor::inputHandler(int input) {	

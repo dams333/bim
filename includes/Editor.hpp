@@ -1,5 +1,7 @@
 #pragma once
 
+#include <map>
+
 #include "Screen.hpp"
 #include "Cursor.hpp"
 #include "ContentBuffer.hpp"
@@ -16,6 +18,8 @@ class Editor {
 		Cursor cursor;
 		ContentBuffer contentBuffer;
 		int firstLine;
+		int lastPrintedLine;
+		int lastUsedScreenLine;
 		Editor::Mode mode;
 
 		void update();

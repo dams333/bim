@@ -10,7 +10,7 @@ void Editor::enter() {
 	} else {
 		this->contentBuffer.newLine(this->cursor.getLine());
 	}
-	this->cursor.setLine(this->cursor.getLine() + 1);
+	this->arrowDown();
 	this->cursor.setPos(0);
 	this->repairCursor();
 }
@@ -23,7 +23,7 @@ void Editor::erase() {
 		int lineLength = this->contentBuffer.getLine(this->cursor.getLine() - 1).length();
 		this->contentBuffer.setLine(this->cursor.getLine() - 1, this->contentBuffer.getLine(this->cursor.getLine() - 1) + this->contentBuffer.getLine(this->cursor.getLine()));
 		this->contentBuffer.removeLine(this->cursor.getLine());
-		this->cursor.setLine(this->cursor.getLine() - 1);
+		this->arrowUp();
 		this->cursor.setPos(lineLength);
 	}
 }
