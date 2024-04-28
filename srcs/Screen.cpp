@@ -112,6 +112,14 @@ void Screen::print(int x, int y, char const *format, ...) {
 	va_end(args);
 }
 
+void Screen::printLiteral(int x, int y, std::string str) {
+	if (this->win == NULL) {
+		throw std::runtime_error("Screen not initialized");
+	}
+
+	mvwprintw(this->win, y, x, "%s", str.c_str());
+}
+
 int Screen::getInput() {
 	if (this->win == NULL) {
 		throw std::runtime_error("Screen not initialized");

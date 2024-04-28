@@ -3,6 +3,7 @@
 #include <ncurses.h>
 #include <cstdarg>
 #include <stdexcept>
+#include <string>
 
 class Screen {
 	private:
@@ -28,6 +29,7 @@ class Screen {
 		void setCursor(int x, int y);
 		void print(int x, int y, char c);
 		void print(int x, int y, char const *format, ...);
+		void printLiteral(int x, int y, std::string str);
 
 		int getInput();
 

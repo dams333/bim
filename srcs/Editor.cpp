@@ -111,7 +111,7 @@ std::pair<int, int> Editor::printContent() {
 	}
 
 	for (auto it = res.begin(); it != res.end(); it++) {
-		this->screen.print(leftPadding, it->first, it->second.c_str());
+		this->screen.printLiteral(leftPadding, it->first, it->second);
 	}
 
 	return cursorOnScreen;
