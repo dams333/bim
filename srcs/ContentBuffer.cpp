@@ -12,9 +12,6 @@ ContentBuffer::ContentBuffer(ContentBuffer const &src) {
 }
 
 ContentBuffer &ContentBuffer::operator=(ContentBuffer const &rhs) {
-	if (this != &rhs) {
-		*this = rhs;
-	}
 	this->buffer = rhs.buffer;
 	return *this;
 }

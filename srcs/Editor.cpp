@@ -11,9 +11,6 @@ Editor::Editor(Editor const &src) {
 }
 
 Editor &Editor::operator=(Editor const &rhs) {
-	if (this != &rhs) {
-		*this = rhs;
-	}
 	this->screen = rhs.screen;
 	this->cursor = rhs.cursor;
 	this->firstLine = rhs.firstLine;

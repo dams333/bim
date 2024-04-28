@@ -11,9 +11,6 @@ Cursor::Cursor(Cursor const &src) {
 }
 
 Cursor &Cursor::operator=(Cursor const &rhs) {
-	if (this != &rhs) {
-		*this = rhs;
-	}
 	this->line = rhs.line;
 	this->pos = rhs.pos;
 	return *this;

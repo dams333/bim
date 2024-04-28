@@ -17,9 +17,6 @@ Screen::Screen(Screen const &src) {
 }
 
 Screen &Screen::operator=(Screen const &rhs) {
-	if (this != &rhs) {
-		*this = rhs;
-	}
 	this->width = rhs.width;
 	this->height = rhs.height;
 	this->win = rhs.win;
