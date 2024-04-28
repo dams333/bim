@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <fstream>
 
 class ContentBuffer {
 	private:
@@ -9,6 +10,7 @@ class ContentBuffer {
 
 	public:
 		ContentBuffer();
+		ContentBuffer(std::string filename);
 		~ContentBuffer();
 		ContentBuffer(ContentBuffer const &src);
 
@@ -21,4 +23,11 @@ class ContentBuffer {
 		void setLine(int index, std::string line);
 		void append(int index, int position, char c);
 		void erase(int index, int position);
+
+		class ImpossibleToOpenFileException: public std::exception {
+			public:
+				virtual const char *what() const throw() {
+					return "Impossible to open file";
+				}
+		};
 };

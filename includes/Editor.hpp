@@ -38,6 +38,7 @@ class Editor {
 
 	public:
 		Editor();
+		Editor(ContentBuffer const contentBuffer);
 		~Editor();
 		Editor(Editor const &src);
 

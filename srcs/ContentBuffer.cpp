@@ -4,6 +4,20 @@ ContentBuffer::ContentBuffer() {
 	this->buffer.push_back("");
 }
 
+ContentBuffer::ContentBuffer(std::string filename) {
+	std::ifstream file(filename);
+	if (!file.is_open()) {
+		throw ContentBuffer::ImpossibleToOpenFileException();
+	}
+	std::string line;
+	while (std::getline(file, line)) {
+		this->buffer.push_back(line);
+	}
+	if (this->buffer.size() == 0) {
+		this->buffer.push_back("");
+	}
+}
+
 ContentBuffer::~ContentBuffer() {
 }
 

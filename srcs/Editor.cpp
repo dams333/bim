@@ -3,6 +3,10 @@
 Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
 }
 
+Editor::Editor(ContentBuffer const contentBuffer): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
+	this->contentBuffer = contentBuffer;
+}
+
 Editor::~Editor() {
 }
 
