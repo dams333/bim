@@ -7,7 +7,7 @@ void Editor::repairCursor() {
 	}
 }
 
-bool Editor::inputHandler(int input) {	
+void Editor::inputHandler(int input) {	
 	if (input == KEY_LEFT) {
 		this->arrowLeft();
 	} else if (input == KEY_RIGHT) {
@@ -30,17 +30,25 @@ bool Editor::inputHandler(int input) {
 				this->addChar(input);
 			}
 		} else if (this->mode == Editor::Mode::VISUAL) {
-			if (input == 105) { // i
-				this->mode = Editor::Mode::INSERT;
-			} else if (input == 113) { // q
-				return true;
-			} else if (input == 119) { // w
-				this->save();
-				return true;
+			if (this->command.length() == 0) {
+				if (input == 105) { // i
+					this->mode = Editor::Mode::INSERT;
+				} else if (input == 58) { // :
+					this->command = ":";
+				}
+			} else {
+				if (input == 10) { // Enter
+					this->handleCommand();
+					this->command = "";
+				} else if (input == 27) { // Escape
+					this->command = "";
+				} else if (input == 127) { // Backspace
+					this->command = this->command.substr(0, this->command.length() - 1);
+				} else {
+					this->command += input;
+				}
 			}
 		}
 
 	}
-
-	return false;
 }

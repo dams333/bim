@@ -1,9 +1,9 @@
 #include "Editor.hpp"
 
-Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL), file(File()) {
+Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL), file(File()), command(""), running(true), message("") {
 }
 
-Editor::Editor(std::string path): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
+Editor::Editor(std::string path): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL), command(""), running(true), message("") {
 	this->contentBuffer = ContentBuffer(path);
 	this->file = File(path);
 }
@@ -24,6 +24,9 @@ Editor &Editor::operator=(Editor const &rhs) {
 	this->lastPrintedLine = rhs.lastPrintedLine;
 	this->lastUsedScreenLine = rhs.lastUsedScreenLine;
 	this->file = rhs.file;
+	this->command = rhs.command;
+	this->running = rhs.running;
+	this->message = rhs.message;
 	return *this;
 }
 
@@ -128,7 +131,15 @@ void Editor::update() {
 	if (this->mode == Editor::Mode::INSERT) {
 		this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "INSERT");
 	} else {
-		this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "VISUAL");
+		if (this->command.length() > 0) {
+			this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, this->command.c_str());
+		} else {
+			if (this->message.length() > 0) {
+				this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, this->message.c_str());
+			} else {
+				this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, "VISUAL");
+			}
+		}
 	}
 
 	this->screen.setCursor(cursorOnScreen.first, cursorOnScreen.second);
@@ -138,10 +149,9 @@ void Editor::update() {
 
 void Editor::routine() {
 	this->update();
-	while (true) {
+	while (this->running) {
 		int c = this->screen.getInput();
-		if (this->inputHandler(c))
-			break;
+		this->inputHandler(c);
 		this->update();
 	}
 }
@@ -156,4 +166,14 @@ void Editor::save() {
 		return;
 	}
 	ofs << this->contentBuffer.getContent();
+
+	this->contentBuffer.save();
+}
+
+void Editor::quit(bool force) {
+	if (force || !this->contentBuffer.getHasChanged()) {
+		this->running = false;
+	} else {
+		this->message = "File not saved (use :q! to force quit)";
+	}
 }

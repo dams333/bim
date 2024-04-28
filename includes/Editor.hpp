@@ -23,12 +23,15 @@ class Editor {
 		int lastUsedScreenLine;
 		Editor::Mode mode;
 		File file;
+		std::string command;
+		bool running;
+		std::string message;
 
 		void update();
 		int getLeftPadding();
 		std::pair<int, int> printContent();
 
-		bool inputHandler(int input);
+		void inputHandler(int input);
 		void repairCursor();
 		void arrowUp();
 		void arrowDown();
@@ -38,6 +41,9 @@ class Editor {
 		void erase();
 		void addChar(int input);
 		void save();
+		void quit(bool force);
+
+		void handleCommand();
 
 	public:
 		Editor();

@@ -7,6 +7,7 @@
 class ContentBuffer {
 	private:
 		std::vector<std::string> buffer;
+		bool hasChanged;
 
 	public:
 		ContentBuffer();
@@ -24,6 +25,8 @@ class ContentBuffer {
 		void append(int index, int position, char c);
 		void erase(int index, int position);
 		std::string getContent();
+		bool getHasChanged();
+		void save();
 
 		class ImpossibleToOpenFileException: public std::exception {
 			public:

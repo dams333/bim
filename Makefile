@@ -11,6 +11,7 @@ SRCS		=	\
 					InputHandler.cpp \
 					InputArrows.cpp \
 					InputContent.cpp \
+					CommandHandler.cpp \
 				)
 				
 
