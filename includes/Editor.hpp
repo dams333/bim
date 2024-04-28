@@ -5,6 +5,7 @@
 #include "Screen.hpp"
 #include "Cursor.hpp"
 #include "ContentBuffer.hpp"
+#include "File.hpp"
 
 class Editor {
 	private:
@@ -21,6 +22,7 @@ class Editor {
 		int lastPrintedLine;
 		int lastUsedScreenLine;
 		Editor::Mode mode;
+		File file;
 
 		void update();
 		int getLeftPadding();
@@ -35,10 +37,11 @@ class Editor {
 		void enter();
 		void erase();
 		void addChar(int input);
+		void save();
 
 	public:
 		Editor();
-		Editor(ContentBuffer const contentBuffer);
+		Editor(std::string path);
 		~Editor();
 		Editor(Editor const &src);
 

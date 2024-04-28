@@ -6,6 +6,7 @@ SRCS		=	\
 				Editor.cpp \
 				Cursor.cpp \
 				ContentBuffer.cpp \
+				File.cpp \
 				$(addprefix inputs/, \
 					InputHandler.cpp \
 					InputArrows.cpp \

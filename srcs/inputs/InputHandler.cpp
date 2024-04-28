@@ -34,6 +34,9 @@ bool Editor::inputHandler(int input) {
 				this->mode = Editor::Mode::INSERT;
 			} else if (input == 113) { // q
 				return true;
+			} else if (input == 119) { // w
+				this->save();
+				return true;
 			}
 		}
 

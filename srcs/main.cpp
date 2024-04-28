@@ -8,8 +8,7 @@ int main(int argc, char **argv) {
 
 	if (argc == 2) {
 		try {
-			ContentBuffer contentBuffer(argv[1]);
-			editor = Editor(contentBuffer);
+			editor = Editor(argv[1]);
 		} catch (ContentBuffer::ImpossibleToOpenFileException &e) {
 			std::cerr << e.what() << std::endl;
 			return 1;

@@ -57,3 +57,11 @@ void ContentBuffer::append(int index, int position, char c) {
 void ContentBuffer::erase(int index, int position) {
 	this->buffer[index].erase(this->buffer[index].begin() + position);
 }
+
+std::string ContentBuffer::getContent() {
+	std::string content;
+	for (std::string line : this->buffer) {
+		content += line + "\n";
+	}
+	return content;
+}

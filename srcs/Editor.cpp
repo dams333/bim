@@ -1,10 +1,11 @@
 #include "Editor.hpp"
 
-Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
+Editor::Editor(): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL), file(File()) {
 }
 
-Editor::Editor(ContentBuffer const contentBuffer): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
-	this->contentBuffer = contentBuffer;
+Editor::Editor(std::string path): firstLine(0), lastPrintedLine(0), lastUsedScreenLine(0), mode(Editor::Mode::VISUAL) {
+	this->contentBuffer = ContentBuffer(path);
+	this->file = File(path);
 }
 
 Editor::~Editor() {
@@ -22,6 +23,7 @@ Editor &Editor::operator=(Editor const &rhs) {
 	this->mode = rhs.mode;
 	this->lastPrintedLine = rhs.lastPrintedLine;
 	this->lastUsedScreenLine = rhs.lastUsedScreenLine;
+	this->file = rhs.file;
 	return *this;
 }
 
@@ -142,4 +144,16 @@ void Editor::routine() {
 			break;
 		this->update();
 	}
+}
+
+void Editor::save() {
+	if (!this->file.isFileDefined()) {
+		return;
+	}
+
+	std::ofstream ofs(this->file.getPath());
+	if (!ofs.is_open()) {
+		return;
+	}
+	ofs << this->contentBuffer.getContent();
 }

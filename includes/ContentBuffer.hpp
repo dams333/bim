@@ -23,6 +23,7 @@ class ContentBuffer {
 		void setLine(int index, std::string line);
 		void append(int index, int position, char c);
 		void erase(int index, int position);
+		std::string getContent();
 
 		class ImpossibleToOpenFileException: public std::exception {
 			public:
