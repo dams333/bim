@@ -16,6 +16,7 @@ class Editor {
 		} Mode;
 		static const int FOOTER_HEIGHT = 2;
 
+		// internal variables
 		Screen screen;
 		Cursor cursor;
 		ContentBuffer contentBuffer;
@@ -28,10 +29,14 @@ class Editor {
 		bool running;
 		std::string message;
 
+		// update and display
 		void update();
 		int getLeftPadding();
 		std::pair<int, int> printContent();
+		std::string getLineOnScreen(int index);
+		int getCursorPosOnScreen();
 
+		// keyboard input handling
 		void inputHandler(int input);
 		void repairCursor();
 		void arrowUp();
@@ -41,13 +46,11 @@ class Editor {
 		void enter();
 		void erase();
 		void addChar(int input);
+		
+		// commands
+		void handleCommand();
 		void save();
 		void quit(bool force);
-
-		void handleCommand();
-
-		std::string getLineOnScreen(int index);
-		int getCursorPosOnScreen();
 
 	public:
 		Editor();

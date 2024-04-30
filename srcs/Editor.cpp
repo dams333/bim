@@ -178,8 +178,6 @@ void Editor::quit(bool force) {
 	}
 }
 
-#include <iostream>
-
 std::string Editor::getLineOnScreen(int index) {
 	std::string line = this->contentBuffer.getLine(index);
 	for (size_t i = 0; i < line.length(); i++) {

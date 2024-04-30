@@ -7,7 +7,7 @@ void Editor::repairCursor() {
 	}
 }
 
-void Editor::inputHandler(int input) {	
+void Editor::inputHandler(int input) {
 	if (input == KEY_LEFT) {
 		this->arrowLeft();
 	} else if (input == KEY_RIGHT) {
