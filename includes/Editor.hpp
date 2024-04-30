@@ -6,6 +6,7 @@
 #include "Cursor.hpp"
 #include "ContentBuffer.hpp"
 #include "File.hpp"
+#include "EditorConfig.hpp"
 
 class Editor {
 	private:
@@ -44,6 +45,9 @@ class Editor {
 		void quit(bool force);
 
 		void handleCommand();
+
+		std::string getLineOnScreen(int index);
+		int getCursorPosOnScreen();
 
 	public:
 		Editor();

@@ -61,7 +61,7 @@ std::pair<int, int> Editor::printContent() {
 		int numerotationPadding = leftPadding - std::to_string(line + 1).length() - 1;
 		this->screen.print(numerotationPadding, screenLine, std::to_string(line + 1).c_str());
 		
-		std::string lineContent = this->contentBuffer.getLine(line);
+		std::string lineContent = this->getLineOnScreen(line);
 		if (lineContent.empty()) {
 			if (line == this->cursor.getLine()) {
 				cursorOnScreen = std::make_pair(leftPadding, screenLine);
@@ -76,8 +76,8 @@ std::pair<int, int> Editor::printContent() {
 				sizeToPrint = lineContent.length();
 			}
 			int lastPos = posInLine + sizeToPrint;
-			if (line == this->cursor.getLine() && posInLine <= this->cursor.getPos() && this->cursor.getPos() <= lastPos) {
-				int cursorPosOnScreen = leftPadding + this->cursor.getPos() - posInLine;
+			if (line == this->cursor.getLine() && posInLine <= this->getCursorPosOnScreen() && this->getCursorPosOnScreen() <= lastPos) {
+				int cursorPosOnScreen = leftPadding + this->getCursorPosOnScreen() - posInLine;
 				int cursorLineOnScreen = screenLine;
 				if (cursorPosOnScreen >= this->screen.getWidth()) {
 					cursorPosOnScreen = leftPadding;
@@ -176,4 +176,36 @@ void Editor::quit(bool force) {
 	} else {
 		this->message = "File not saved (use :q! to force quit)";
 	}
+}
+
+#include <iostream>
+
+std::string Editor::getLineOnScreen(int index) {
+	std::string line = this->contentBuffer.getLine(index);
+	for (size_t i = 0; i < line.length(); i++) {
+		if (line[i] == '\t') {
+			line[i++] = ' ';
+			for (; i % EditorConfig::tabSize != 0; i++) {
+				line.insert(i, " ");
+			}
+			i--;
+		}
+	}
+	return line;
+}
+
+int Editor::getCursorPosOnScreen() {
+	int pos = this->cursor.getPos();
+	std::string line = this->contentBuffer.getLine(this->cursor.getLine());
+	for (int i = 0; i < pos; i++) {
+		if (line[i] == '\t') {
+			line[i++] = ' ';
+			for (; i % EditorConfig::tabSize != 0; i++) {
+				line.insert(i, " ");
+				pos++;
+			}
+			i--;
+		}
+	}
+	return pos;
 }
