@@ -133,6 +133,7 @@ void Editor::update() {
 	} else {
 		if (this->command.length() > 0) {
 			this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, this->command.c_str());
+			cursorOnScreen = std::make_pair(this->command.length(), this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1);
 		} else {
 			if (this->message.length() > 0) {
 				this->screen.print(0, this->screen.getHeight() - Editor::FOOTER_HEIGHT + 1, this->message.c_str());
